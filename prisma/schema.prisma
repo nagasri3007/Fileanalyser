@@ -1,0 +1,34 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Analysis {
+  id          String   @id @default(cuid())
+  filename    String
+  mimeType    String
+  size        Int      // in bytes
+  createdAt   DateTime @default(now())
+  
+  // Basic content extraction
+  title       String?
+  wordCount   Int?
+  pageCount   Int?
+  resolution  String?  // e.g. "1920x1080" for images
+  dimensions  String?  // JSON string for raw dimensions {width, height}
+  
+  // Detailed Analysis (Stored as JSON or text)
+  summary     String?  // AI or heuristic summary
+  keywords    String?  // Comma-separated
+  sentiment   String?  // e.g. "Neutral", "Positive"
+  complexity  Float?   // Readability Score
+  
+  // File Content Storage (Use with caution - for large files use Vercel Blob)
+  content     Bytes?   // Only store small files. Mock storage for now.
+}
