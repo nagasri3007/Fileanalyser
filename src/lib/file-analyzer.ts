@@ -1,8 +1,4 @@
 // @ts-nocheck
-import mammoth from 'mammoth';
-const pdf = require('pdf-parse');
-const sharp = require('sharp');
-// Import GoogleGenAI from the new SDK
 import { GoogleGenAI } from "@google/genai";
 
 const client = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
@@ -30,6 +26,11 @@ export async function analyzeFile(buffer: Buffer, mimeType: string, filename: st
 
     let originalText = "";
     let geminiParts: any[] = [];
+
+    // Lazy load libraries to prevent cold start crashes if native modules are missing
+    const mammoth = (await import("mammoth")).default;
+    const pdf = require("pdf-parse"); // PDF Parse is CJS
+    const sharp = (await import("sharp")).default;
 
     try {
         // 1. Basic Metadata Extraction & Pre-processing
