@@ -5,6 +5,10 @@ import { analyzeFile } from '@/lib/file-analyzer';
 
 export const dynamic = 'force-dynamic';
 
+export async function GET() {
+    return NextResponse.json({ status: 'ok', message: 'Upload API is running. Use POST to upload files.' });
+}
+
 export async function POST(req: NextRequest) {
     try {
         const formData = await req.formData();

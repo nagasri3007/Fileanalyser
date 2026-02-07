@@ -35,8 +35,16 @@ export default function Home() {
         body: formData,
       });
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Upload failed");
+      let data;
+      const text = await res.text();
+      try {
+        data = JSON.parse(text);
+      } catch (e) {
+        console.error("Failed to parse JSON response:", text);
+        throw new Error(`Server Error: ${res.status} ${res.statusText}. Response might be HTML or empty.`);
+      }
+
+      if (!res.ok) throw new Error(data.error || `Error ${res.status}: ${data.message || "Upload failed"}`);
 
       setResult(data.analysis);
     } catch (err: any) {
